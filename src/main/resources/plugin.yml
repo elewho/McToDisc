@@ -1,0 +1,4 @@
+name: Mctodisc
+version: ${project.version}
+main: me.imnotdani.mctodisc.Mctodisc
+api-version: 1.16
