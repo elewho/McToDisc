@@ -37,7 +37,7 @@ public final class Mctodisc extends JavaPlugin implements Listener {
             System.out.println("McToDisc plugin is now starting.");
             getServer().getPluginManager().registerEvents(this, this);
 
-                jda = JDABuilder.createDefault("", GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
+                jda = JDABuilder.createDefault(DiscordBotToken, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
                         .addEventListeners(new DiscordListener(this))
                         .setActivity(Activity.watching(Bukkit.getOnlinePlayers().size() + " gaymers online!"))
                         .build();
