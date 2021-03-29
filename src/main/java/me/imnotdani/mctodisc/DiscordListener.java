@@ -41,17 +41,16 @@ public class DiscordListener extends ListenerAdapter {
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event){
         boolean isBot = event.getUser().isBot();
         TextChannel channel = event.getChannel();
-        String channelID  = event.getChannel().getId();
-        String rawMsg = event.retrieveMessage().complete().getContentRaw();
-        int sizeofMsg = event.retrieveMessage().complete().getContentRaw().split(" ").length; //Checks that message is ONLY a username.
+        String channelID  = channel.getId(), rawMsg = event.retrieveMessage().complete().getContentRaw();
+        int sizeOfMsg = rawMsg.split(" ").length; //Checks that message is ONLY a username.
 
         if(channelID.equals(mctodisc.getWhitelistChannelID())) {
-            if (sizeofMsg > 1) {
+            if (sizeOfMsg > 1) {
                 channel.sendMessage("Please make sure that you only enter your in-game name and nothing else.").queue();
                 return;
             }
 
-            if(!isBot && sizeofMsg == 1){
+            if(!isBot && sizeOfMsg == 1){
                 mctodisc.whitelistUser(rawMsg);
             }
         }
