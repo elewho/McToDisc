@@ -7,18 +7,21 @@ import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
-
+import java.util.ArrayList;
+import java.util.List;
 
 public final class Mctodisc extends JavaPlugin {
 
     private TextChannel serverChatChannel = null;
     private JDA jda = null;
     private final MinecraftListener minecraftListener = new MinecraftListener(this);
-    private String DiscordBotToken = "",  MinecraftServerChatChannelID ="", WhitelistChannelID = "";
+    private String discordBotToken = "",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
 
     @Override
     public void onEnable() {
@@ -26,13 +29,13 @@ public final class Mctodisc extends JavaPlugin {
             loadConfig();
             System.out.println("McToDisc plugin is now starting.");
             getServer().getPluginManager().registerEvents(minecraftListener, this);
-            jda = JDABuilder.createDefault(DiscordBotToken, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
+            jda = JDABuilder.createDefault("", GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
                         .addEventListeners(new DiscordListener(this))
                         .setActivity(Activity.watching(Bukkit.getOnlinePlayers().size() + " gaymers online!"))
                         .build();
                 jda.awaitReady();
 
-                serverChatChannel = jda.getTextChannelById(MinecraftServerChatChannelID);
+                serverChatChannel = jda.getTextChannelById(minecraftServerChatChannelID);
 
         } catch (LoginException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
@@ -57,30 +60,36 @@ public final class Mctodisc extends JavaPlugin {
         if(!config.contains("DiscordBotToken")){
             config.set("DiscordBotToken", "");
         }
-        DiscordBotToken = this.getConfig().getString("DiscordBotToken");
+        discordBotToken = this.getConfig().getString("DiscordBotToken");
 
         if(!config.contains("MinecraftServerChatChannelID")){
             config.set("MinecraftServerChatChannelID", "");
         }
-        MinecraftServerChatChannelID = config.getString("MinecraftServerChatChannelID");
+        minecraftServerChatChannelID = config.getString("MinecraftServerChatChannelID");
 
         if(!config.contains("WhitelistChannelID")){
             config.set("WhitelistChannelID", "");
         }
-        WhitelistChannelID = config.getString("WhitelistChannelID");
+        whitelistChannelID = config.getString("WhitelistChannelID");
+
+        if(!config.contains("BotChannelID")){
+            config.set("BotChannelID", "");
+        }
+        botChannelID = config.getString("BotChannelID");
 
         config.options().copyDefaults(true);
         this.saveConfig();
     }
 
     public String getWhitelistChannelID(){
-        return WhitelistChannelID;
+        return whitelistChannelID;
     }
 
     public String getMinecraftServerChatChannelID(){
-        return MinecraftServerChatChannelID;
+        return minecraftServerChatChannelID;
     }
 
+    public String getBotChannelID(){ return botChannelID; }
 
     /**
      * Sends Minecraft messages to Discord
@@ -134,6 +143,20 @@ public final class Mctodisc extends JavaPlugin {
         }
     }
 
+    public List<String> getOnlinePlayers(){
+        ArrayList<Player> onlinePlayers = new ArrayList(Bukkit.getOnlinePlayers());
+        ArrayList<String> playerNames = new ArrayList<String>();
+        System.out.println(onlinePlayers);
+
+        if (onlinePlayers != null) {
+            for (Player p : onlinePlayers) {
+                playerNames.add(p.getName());
+            }
+            return playerNames;
+        }
+        return null;
+    }
+
     /**
      * Sends Discord messages to the Minecraft server.
      *
@@ -151,4 +174,11 @@ public final class Mctodisc extends JavaPlugin {
         jda.getPresence().setActivity(Activity.watching(Bukkit.getOnlinePlayers().size() + " gaymers online!"));
     }
 
+    public OfflinePlayer getPlayer(String user) {
+        OfflinePlayer offlinePlayer = getServer().getOfflinePlayer(user);
+        if (offlinePlayer != null) {
+            return offlinePlayer;
+        }
+        return null;
+    }
 }

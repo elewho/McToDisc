@@ -41,9 +41,6 @@ public class MinecraftListener implements Listener {
         int i = 3;
         mctodisc.sendToDiscord((e.getDeathMessage().toLowerCase(Locale.ROOT)), i);
     }
-
-    
-
     /*
     I CAN'T GET THE NICE NAMES OF THE ADVANCEMENTS
     @EventHandler
@@ -53,5 +50,4 @@ public class MinecraftListener implements Listener {
         sendToDiscord(e.getPlayer().getName(), adv.getNamespace(), i);
     }
     */
-
 }
