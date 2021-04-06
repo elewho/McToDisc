@@ -103,27 +103,20 @@ public class DiscordListener extends ListenerAdapter {
 
     private void listOnlinePlayers(TextChannel channel){
         List<String> playerNames = mctodisc.getOnlinePlayers();
-        int size;
+        int size = playerNames.size();
 
-        if(playerNames == null){
-            size = 0;
-        } else{
-            size = playerNames.size();
-        }
-
-        String toPrint = "";
+        StringBuilder toPrint;
 
         if(size == 0){
-            toPrint = "There are currently no players online right now.";
+            toPrint = new StringBuilder("There are currently no players online right now.");
         } else if (size == 1) {
-            toPrint = "There is only 1 player online: " + playerNames.get(0);
-
+            toPrint = new StringBuilder("There is only 1 player online: " + playerNames.get(0));
         } else{
-            toPrint = "There are currently **" + size + " players** online right now:\n";
+            toPrint = new StringBuilder("There are currently **" + size + " players** online right now:\n");
             for(String s : playerNames){
-                toPrint = toPrint + s + "\n";
+                toPrint.append(s).append("\n");
             }
         }
-        channel.sendMessage(toPrint).queue();
+        channel.sendMessage(toPrint.toString()).queue();
     }
 }
