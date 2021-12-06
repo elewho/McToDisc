@@ -24,7 +24,7 @@ public final class Mctodisc extends JavaPlugin {
     private final Logger logger = this.getLogger();
     private JDA jda = null;
     private final MinecraftListener minecraftListener = new MinecraftListener(this);
-    private String discordBotToken = "ODI1MTQ1MzE4OTcwMzU5ODE5.YF5qdg.QU8_khVAAtgZnowMIDC2JiC_xdg",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
+    private String discordBotToken = "",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
 
     @Override
     public void onEnable() {
