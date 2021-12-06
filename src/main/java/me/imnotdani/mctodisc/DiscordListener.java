@@ -10,6 +10,8 @@ import org.bukkit.Statistic;
 
 import java.util.List;
 
+import static org.bukkit.Statistic.NOTEBLOCK_PLAYED;
+
 public class DiscordListener extends ListenerAdapter {
 
     private final Mctodisc mctodisc;
@@ -89,9 +91,9 @@ public class DiscordListener extends ListenerAdapter {
 
             channel.sendMessage("**Player:** " + user +
                     "\n\n:skull_crossbones:  **Deaths:** " + player.getStatistic(Statistic.DEATHS) +
-                    "\n\n:dancer:  **Times jumped:** " + player.getStatistic(Statistic.JUMP) +
-                    "\n\n:person_kneeling:  **Sneak time:** " + player.getStatistic(Statistic.SNEAK_TIME) +
-                    "\n\n:money_with_wings:  **Villager trades:** " + player.getStatistic(Statistic.TRADED_WITH_VILLAGER) +
+                    "\n\n:notes:  **Noteblocks played:** " + player.getStatistic(NOTEBLOCK_PLAYED) +
+                    "\n\n:potted_plant:  **Flowers potted:** " + player.getStatistic(Statistic.FLOWER_POTTED) +
+                    "\n\n:carousel_horse:  **Distance travelled on a Strider(cm):** " + player.getStatistic(Statistic.STRIDER_ONE_CM) +
                     "\n\n:cake:  **Cake slices eaten: ** " + player.getStatistic(Statistic.CAKE_SLICES_EATEN)).queue();
         } catch(NullPointerException npe){
             channel.sendMessage("Player not found.").queue();
