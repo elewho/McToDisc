@@ -12,7 +12,7 @@ import java.util.List;
 
 public class DiscordListener extends ListenerAdapter {
 
-    private Mctodisc mctodisc;
+    private final Mctodisc mctodisc;
     public DiscordListener(Mctodisc mctodisc){
         this.mctodisc = mctodisc;
     }
@@ -20,7 +20,7 @@ public class DiscordListener extends ListenerAdapter {
     /**
      * Waits for message to be sent in a specific text channel.
      *
-     * @param event
+     * @param event - for any guild messages read by bot
      */
     public void onGuildMessageReceived(GuildMessageReceivedEvent event){
         boolean isBot = event.getAuthor().isBot();
@@ -56,7 +56,7 @@ public class DiscordListener extends ListenerAdapter {
     /**
      * Waits for a reaction to be added in a specific text channel. Only mods should be able to add reaction.
      *
-     * @param event
+     * @param event - sees when there's a reaction
      */
     public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event){
         boolean isBot = event.getUser().isBot();
@@ -79,7 +79,7 @@ public class DiscordListener extends ListenerAdapter {
     private void listCommands(TextChannel channel){
         channel.sendMessage("**List of available commands:**\n\n" +
                 "`!mlistOn` - lists the names of players online right now\n" +
-                "`!mstats <username>` - lists statistics of a given player (eg. `!stats artemercy`)\n" +
+                "`!mstats <username>` - lists statistics of a given player (eg. `!mstats artemercy`)\n" +
                 "`!mhelp` - to bring up this menu").queue();
     }
 
@@ -87,14 +87,12 @@ public class DiscordListener extends ListenerAdapter {
         try{
             OfflinePlayer player = mctodisc.getPlayer(user);
 
-            if(player != null){
-                channel.sendMessage("**Player:** " + user +
-                        "\n\n:skull_crossbones:  **Deaths:** " + player.getStatistic(Statistic.DEATHS) +
-                        "\n\n:dancer:  **Times jumped:** " + player.getStatistic(Statistic.JUMP) +
-                        "\n\n:person_kneeling:  **Sneak time:** " + player.getStatistic(Statistic.SNEAK_TIME) +
-                        "\n\n:money_with_wings:  **Villager trades:** " + player.getStatistic(Statistic.TRADED_WITH_VILLAGER) +
-                        "\n\n:cake:  **Cake slices eaten: ** " + player.getStatistic(Statistic.CAKE_SLICES_EATEN)).queue();
-            }
+            channel.sendMessage("**Player:** " + user +
+                    "\n\n:skull_crossbones:  **Deaths:** " + player.getStatistic(Statistic.DEATHS) +
+                    "\n\n:dancer:  **Times jumped:** " + player.getStatistic(Statistic.JUMP) +
+                    "\n\n:person_kneeling:  **Sneak time:** " + player.getStatistic(Statistic.SNEAK_TIME) +
+                    "\n\n:money_with_wings:  **Villager trades:** " + player.getStatistic(Statistic.TRADED_WITH_VILLAGER) +
+                    "\n\n:cake:  **Cake slices eaten: ** " + player.getStatistic(Statistic.CAKE_SLICES_EATEN)).queue();
         } catch(NullPointerException npe){
             channel.sendMessage("Player not found.").queue();
             npe.printStackTrace();
@@ -104,7 +102,6 @@ public class DiscordListener extends ListenerAdapter {
     private void listOnlinePlayers(TextChannel channel){
         List<String> playerNames = mctodisc.getOnlinePlayers();
         int size = playerNames.size();
-
         StringBuilder toPrint;
 
         if(size == 0){

@@ -5,6 +5,7 @@ import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.entities.TextChannel;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
@@ -15,10 +16,12 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.security.auth.login.LoginException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Logger;
 
 public final class Mctodisc extends JavaPlugin {
 
     private TextChannel serverChatChannel = null;
+    private final Logger logger = this.getLogger();
     private JDA jda = null;
     private final MinecraftListener minecraftListener = new MinecraftListener(this);
     private String discordBotToken = "",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
@@ -27,10 +30,11 @@ public final class Mctodisc extends JavaPlugin {
     public void onEnable() {
         try{
             loadConfig();
-            System.out.println("McToDisc plugin is now starting.");
+            logger.info("McToDisc plugin is now starting.");
             getServer().getPluginManager().registerEvents(minecraftListener, this);
             jda = JDABuilder.createDefault(discordBotToken, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
-                        .addEventListeners(new DiscordListener(this))
+                    .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
+                    .addEventListeners(new DiscordListener(this))
                         .setActivity(Activity.watching(Bukkit.getOnlinePlayers().size() + " gaymers online!"))
                         .build();
                 jda.awaitReady();
@@ -46,7 +50,6 @@ public final class Mctodisc extends JavaPlugin {
     public void onDisable() {
         try{
             jda.shutdown();
-            System.out.println("McToDisc plugin is now shutting down.");
         } catch (Exception e){
             e.printStackTrace();
         }
@@ -57,10 +60,10 @@ public final class Mctodisc extends JavaPlugin {
 
         FileConfiguration config = this.getConfig();
 
-        if(!config.contains("DiscordBotToken")){
-            config.set("DiscordBotToken", "");
-        }
-        discordBotToken = this.getConfig().getString("DiscordBotToken");
+//        if(!config.contains("DiscordBotToken")){
+//            config.set("DiscordBotToken", "");
+//        }
+//        discordBotToken = this.getConfig().getString("DiscordBotToken");
 
         if(!config.contains("MinecraftServerChatChannelID")){
             config.set("MinecraftServerChatChannelID", "");
@@ -76,7 +79,6 @@ public final class Mctodisc extends JavaPlugin {
             config.set("BotChannelID", "");
         }
         botChannelID = config.getString("BotChannelID");
-
         config.options().copyDefaults(true);
         this.saveConfig();
     }
@@ -93,11 +95,12 @@ public final class Mctodisc extends JavaPlugin {
      *
      */
     public void sendToDiscord(String user, String msg, int i){
-        switch(i){
-            case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
+        serverChatChannel.sendMessage("**" + user + ":** " + msg).queue();
+//        switch(i){
+//            case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
             //case 2: serverChatChannel.sendMessage("user: " + user + "msg: " + msg).queue(); break;
-            default: break;
-        }
+//            default: break;
+//        }
     }
 
     /**
@@ -155,7 +158,7 @@ public final class Mctodisc extends JavaPlugin {
 
     public List<String> getOnlinePlayers(){
         ArrayList<Player> onlinePlayers = new ArrayList(Bukkit.getOnlinePlayers());
-        ArrayList<String> playerNames = new ArrayList<String>();
+        ArrayList<String> playerNames = new ArrayList<>();
 
         for (Player p : onlinePlayers) {
             playerNames.add(p.getName());
