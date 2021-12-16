@@ -2,3 +2,5 @@ name: Mctodisc
 version: ${project.version}
 main: me.imnotdani.mctodisc.Mctodisc
 api-version: 1.17
+author: imnotdani
+description: Connects a Minecraft server to a Discord server

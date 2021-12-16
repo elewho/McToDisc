@@ -38,19 +38,8 @@ public class MinecraftListener implements Listener {
     }
 
     @EventHandler
-    private void onPlayerDeath(PlayerDeathEvent e){
+    private void onPlayerDeath(PlayerDeathEvent e) {
         int i = 3;
-            mctodisc.sendToDiscord((Objects.requireNonNull(e.getDeathMessage()).toLowerCase(Locale.ROOT)), i);
+        mctodisc.sendToDiscord((Objects.requireNonNull(e.getDeathMessage()).toLowerCase(Locale.ROOT)), i);
     }
-
-    /*
-    @EventHandler
-    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
-        int i = 2;
-        ArrayList<String> criteria = new ArrayList<>(e.getAdvancement().getCriteria());
-        for(String s : criteria)
-        mctodisc.sendToDiscord(e.getPlayer().getName(), s, i);
-    }
-     */
-
 }

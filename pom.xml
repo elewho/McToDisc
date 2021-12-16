@@ -6,7 +6,7 @@
 
     <groupId>me.imnotdani</groupId>
     <artifactId>Mctodisc</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
     <packaging>jar</packaging>
 
     <name>Mctodisc</name>
@@ -81,6 +81,7 @@
             <groupId>net.dv8tion</groupId>
             <artifactId>JDA</artifactId>
             <version>4.2.1_253</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>

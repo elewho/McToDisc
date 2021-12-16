@@ -14,6 +14,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import javax.security.auth.login.LoginException;
+
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
@@ -30,7 +32,7 @@ public final class Mctodisc extends JavaPlugin {
     public void onEnable() {
         try{
             loadConfig();
-            logger.info("McToDisc plugin is now starting.");
+            //serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
             getServer().getPluginManager().registerEvents(minecraftListener, this);
             jda = JDABuilder.createDefault(discordBotToken, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
@@ -49,6 +51,7 @@ public final class Mctodisc extends JavaPlugin {
     @Override
     public void onDisable() {
         try{
+           // serverChatChannel.sendMessage("The server is shutting down.").queue();
             jda.shutdown();
         } catch (Exception e){
             e.printStackTrace();
@@ -56,14 +59,16 @@ public final class Mctodisc extends JavaPlugin {
     }
 
     private void loadConfig() {
+        logger.info("**** Checking if Mctodisc config file exists. ****");
+        File configFile = new File(getDataFolder(), "config.yml");
+
+        if(!configFile.exists()){
+            logger.info("**** Config file not found. Creating Mctodisc config. ****");
+            saveResource("config.yml", false);
+        }
+        logger.info("**** Loading Mctodisc config. ****");
         this.saveDefaultConfig();
-
         FileConfiguration config = this.getConfig();
-
-//        if(!config.contains("DiscordBotToken")){
-//            config.set("DiscordBotToken", "");
-//        }
-//        discordBotToken = this.getConfig().getString("DiscordBotToken");
 
         if(!config.contains("MinecraftServerChatChannelID")){
             config.set("MinecraftServerChatChannelID", "");
