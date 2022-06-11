@@ -12,7 +12,6 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 
@@ -64,10 +63,10 @@ public final class Mctodisc extends JavaPlugin {
 
         if(!configFile.exists()){
             logger.info("**** Config file not found. Creating Mctodisc config. ****");
-            saveResource("config.yml", false);
+            getConfig().options().copyDefaults();
+            saveDefaultConfig();
         }
         logger.info("**** Loading Mctodisc config. ****");
-        this.saveDefaultConfig();
         FileConfiguration config = this.getConfig();
 
         if(!config.contains("MinecraftServerChatChannelID")){
@@ -102,7 +101,7 @@ public final class Mctodisc extends JavaPlugin {
     public void sendToDiscord(String user, String msg, int i){
         switch(i){
             case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
-            case 2: serverChatChannel.sendMessage(":exploding_head: **" + user + " " + msg + "**").queue(); break;
+//            case 2: serverChatChannel.sendMessage(":exploding_head: **" + user + " " + msg + "**").queue(); break;
             default: break;
         }
     }

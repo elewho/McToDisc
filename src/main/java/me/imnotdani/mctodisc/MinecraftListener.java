@@ -44,9 +44,9 @@ public class MinecraftListener implements Listener {
         mctodisc.sendToDiscord((Objects.requireNonNull(e.deathMessage().toString()).toLowerCase(Locale.ROOT)), i);
     }
 
-    @EventHandler
-    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
-        int i = 2;
-        mctodisc.sendToDiscord(e.getPlayer().getName(), e.getAdvancement().getDisplay().toString(), i);
-    }
+//    @EventHandler
+//    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
+//        int i = 2;
+//        mctodisc.sendToDiscord(e.getPlayer().getName(), e.getAdvancement().getDisplay().toString(), i);
+//    }
 }
