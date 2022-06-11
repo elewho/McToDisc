@@ -4,6 +4,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
+import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
@@ -40,6 +41,12 @@ public class MinecraftListener implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent e) {
         int i = 3;
-        mctodisc.sendToDiscord((Objects.requireNonNull(e.getDeathMessage()).toLowerCase(Locale.ROOT)), i);
+        mctodisc.sendToDiscord((Objects.requireNonNull(e.deathMessage().toString()).toLowerCase(Locale.ROOT)), i);
+    }
+
+    @EventHandler
+    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
+        int i = 2;
+        mctodisc.sendToDiscord(e.getPlayer().getName(), e.getAdvancement().getDisplay().toString(), i);
     }
 }

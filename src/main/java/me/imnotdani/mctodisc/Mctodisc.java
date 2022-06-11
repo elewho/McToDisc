@@ -12,6 +12,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.jetbrains.annotations.NotNull;
 
 import javax.security.auth.login.LoginException;
 
@@ -26,13 +27,12 @@ public final class Mctodisc extends JavaPlugin {
     private final Logger logger = this.getLogger();
     private JDA jda = null;
     private final MinecraftListener minecraftListener = new MinecraftListener(this);
-    private String discordBotToken = "",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
+    private String discordBotToken = "ODI1MTQ1MzE4OTcwMzU5ODE5.YF5qdg.1wBnWM31Q1r_uW8ADno_vUJh320",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
 
     @Override
     public void onEnable() {
         try{
             loadConfig();
-            //serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
             getServer().getPluginManager().registerEvents(minecraftListener, this);
             jda = JDABuilder.createDefault(discordBotToken, GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_MESSAGE_REACTIONS)
                     .disableCache(CacheFlag.VOICE_STATE, CacheFlag.EMOTE)
@@ -42,7 +42,7 @@ public final class Mctodisc extends JavaPlugin {
                 jda.awaitReady();
 
                 serverChatChannel = jda.getTextChannelById(minecraftServerChatChannelID);
-
+            serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
         } catch (LoginException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -51,7 +51,7 @@ public final class Mctodisc extends JavaPlugin {
     @Override
     public void onDisable() {
         try{
-           // serverChatChannel.sendMessage("The server is shutting down.").queue();
+            serverChatChannel.sendMessage("The server is shutting down.").queue();
             jda.shutdown();
         } catch (Exception e){
             e.printStackTrace();
@@ -89,7 +89,7 @@ public final class Mctodisc extends JavaPlugin {
     }
 
     /**
-     * Sends Minecraft messages to Discord
+     * Sends normal chat messages to Discord
      *
      * @param user - Person sending the message
      * @param msg -  Message sent on Minecraft
@@ -100,20 +100,19 @@ public final class Mctodisc extends JavaPlugin {
      *
      */
     public void sendToDiscord(String user, String msg, int i){
-        serverChatChannel.sendMessage("**" + user + ":** " + msg).queue();
-//        switch(i){
-//            case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
-            //case 2: serverChatChannel.sendMessage("user: " + user + "msg: " + msg).queue(); break;
-//            default: break;
-//        }
+        switch(i){
+            case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
+            case 2: serverChatChannel.sendMessage(":exploding_head: **" + user + " " + msg + "**").queue(); break;
+            default: break;
+        }
     }
 
     /**
-     * Sends Minecraft messages to the Discord
+     * Sends Minecraft events messages to the Discord
      *
-     * @param s- Passed String; can either be name or death message
+     * @param s- Passed String; can either be name, death message or advnacement
      * @param i - switch case number
-     * 1: join, 2: leave, 3: death
+     * 1: join, 2: leave, 3: death, 4: advancement
      *
      */
     public void sendToDiscord(String s, int i){

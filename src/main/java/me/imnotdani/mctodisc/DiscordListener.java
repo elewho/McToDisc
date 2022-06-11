@@ -10,8 +10,6 @@ import org.bukkit.Statistic;
 
 import java.util.List;
 
-import static org.bukkit.Statistic.NOTEBLOCK_PLAYED;
-
 public class DiscordListener extends ListenerAdapter {
 
     private final Mctodisc mctodisc;
@@ -33,7 +31,6 @@ public class DiscordListener extends ListenerAdapter {
                 if(channelID.equals(mctodisc.getMinecraftServerChatChannelID())){
                     mctodisc.sendToServer(user, rawMsg);
                 }
-
                 if(channelID.equals(mctodisc.getBotChannelID())){
                     if(rawMsg.startsWith("!")){
                         String []msgSplit = rawMsg.split(" ");
@@ -71,7 +68,6 @@ public class DiscordListener extends ListenerAdapter {
                 channel.sendMessage("Please make sure that you only enter your in-game name and nothing else.").queue();
                 return;
             }
-
             if(!isBot && sizeOfMsg == 1){
                 mctodisc.whitelistUser(rawMsg);
             }
@@ -88,12 +84,11 @@ public class DiscordListener extends ListenerAdapter {
     private void listStats(String user, TextChannel channel){
         try{
             OfflinePlayer player = mctodisc.getPlayer(user);
-
             channel.sendMessage("**Player:** " + user +
                     "\n\n:skull_crossbones:  **Deaths:** " + player.getStatistic(Statistic.DEATHS) +
-                    "\n\n:notes:  **Noteblocks played:** " + player.getStatistic(NOTEBLOCK_PLAYED) +
+                    "\n\n:bell:  **Bells rung:** " + player.getStatistic(Statistic.BELL_RING) +
                     "\n\n:potted_plant:  **Flowers potted:** " + player.getStatistic(Statistic.FLOWER_POTTED) +
-                    "\n\n:carousel_horse:  **Distance travelled on a Strider(cm):** " + player.getStatistic(Statistic.STRIDER_ONE_CM) +
+                    "\n\n:magic_wand:  **Items enchanted:** " + player.getStatistic(Statistic.ITEM_ENCHANTED) +
                     "\n\n:cake:  **Cake slices eaten: ** " + player.getStatistic(Statistic.CAKE_SLICES_EATEN)).queue();
         } catch(NullPointerException npe){
             channel.sendMessage("Player not found.").queue();
