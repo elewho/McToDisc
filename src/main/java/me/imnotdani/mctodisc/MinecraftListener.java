@@ -1,9 +1,10 @@
 package me.imnotdani.mctodisc;
 
+import io.papermc.paper.event.player.AsyncChatEvent;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
-import org.bukkit.event.player.AsyncPlayerChatEvent;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -17,9 +18,10 @@ public class MinecraftListener implements Listener {
     }
 
     @EventHandler
-    private void onServerMessageReceived(AsyncPlayerChatEvent e){
+    private void onServerMessageReceived(AsyncChatEvent e){
         int i = 1;
-        mctodisc.sendToDiscord(e.getPlayer().getName(), e.getMessage(), i);
+        final var msg = PlainTextComponentSerializer.plainText().serialize(e.message());
+        mctodisc.sendToDiscord(e.getPlayer().getName(), msg, i);
     }
 
     @EventHandler
@@ -41,9 +43,15 @@ public class MinecraftListener implements Listener {
         mctodisc.sendToDiscord(e.getDeathMessage(), i);
     }
 
-//    @EventHandler
-//    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
-//        int i = 2;
-//        mctodisc.sendToDiscord(e.getPlayer().getName(), e.getAdvancement().getDisplay().toString(), i);
-//    }
+    @EventHandler
+    private void onPlayerAdvancement(PlayerAdvancementDoneEvent e){
+        try{
+           int i = 4;
+           if(e.getAdvancement().getDisplay() != null && e.getAdvancement().getDisplay().doesAnnounceToChat()){
+               final var s = PlainTextComponentSerializer.plainText().serialize(e.message());
+               mctodisc.sendToDiscord(s, i);
+           }
+        } catch (NullPointerException npe){
+        }
+    }
 }

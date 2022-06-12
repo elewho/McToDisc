@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -27,7 +28,6 @@ public final class Mctodisc extends JavaPlugin {
     private JDA jda = null;
     private final MinecraftListener minecraftListener = new MinecraftListener(this);
     private String discordBotToken = "",  minecraftServerChatChannelID ="", whitelistChannelID = "", botChannelID = "'";
-
     @Override
     public void onEnable() {
         try{
@@ -41,6 +41,7 @@ public final class Mctodisc extends JavaPlugin {
                 jda.awaitReady();
                 serverChatChannel = jda.getTextChannelById(minecraftServerChatChannelID);
                 serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
+                this.getServer();
         } catch (LoginException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -100,7 +101,6 @@ public final class Mctodisc extends JavaPlugin {
     public void sendToDiscord(String user, String msg, int i){
         switch(i){
             case 1: serverChatChannel.sendMessage("**" + user + ":** " + msg).queue(); break;
-//            case 2: serverChatChannel.sendMessage(":exploding_head: **" + user + " " + msg + "**").queue(); break;
             default: break;
         }
     }
@@ -120,6 +120,7 @@ public final class Mctodisc extends JavaPlugin {
                 jda.getPresence().setActivity((Activity.watching(Bukkit.getOnlinePlayers().size() - 1 + " gaymers online!")));
                 break;
             case 3: serverChatChannel.sendMessage(":skull_crossbones: **" + s + "**.").queue(); break;
+            case 4: serverChatChannel.sendMessage(":exploding_head: **" + s + "**").queue(); break;
             default: break;
         }
     }
