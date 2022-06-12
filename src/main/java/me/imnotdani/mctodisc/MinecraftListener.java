@@ -8,9 +8,6 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-import java.util.Locale;
-import java.util.Objects;
-
 public class MinecraftListener implements Listener {
 
     private final Mctodisc mctodisc;
@@ -41,7 +38,7 @@ public class MinecraftListener implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent e) {
         int i = 3;
-        mctodisc.sendToDiscord((Objects.requireNonNull(e.deathMessage().toString()).toLowerCase(Locale.ROOT)), i);
+        mctodisc.sendToDiscord(e.getDeathMessage(), i);
     }
 
 //    @EventHandler

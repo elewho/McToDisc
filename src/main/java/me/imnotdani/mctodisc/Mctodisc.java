@@ -39,9 +39,8 @@ public final class Mctodisc extends JavaPlugin {
                         .setActivity(Activity.watching(Bukkit.getOnlinePlayers().size() + " gaymers online!"))
                         .build();
                 jda.awaitReady();
-
                 serverChatChannel = jda.getTextChannelById(minecraftServerChatChannelID);
-            serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
+                serverChatChannel.sendMessage("The server is starting up! Hold on tight.").queue();
         } catch (LoginException | InterruptedException | NullPointerException e) {
             e.printStackTrace();
         }
@@ -63,10 +62,10 @@ public final class Mctodisc extends JavaPlugin {
 
         if(!configFile.exists()){
             logger.info("**** Config file not found. Creating Mctodisc config. ****");
-            getConfig().options().copyDefaults();
-            saveDefaultConfig();
+            saveResource("config.yml", false);
         }
         logger.info("**** Loading Mctodisc config. ****");
+        this.saveDefaultConfig();
         FileConfiguration config = this.getConfig();
 
         if(!config.contains("MinecraftServerChatChannelID")){

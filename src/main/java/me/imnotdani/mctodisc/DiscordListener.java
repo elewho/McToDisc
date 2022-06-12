@@ -1,8 +1,8 @@
 package me.imnotdani.mctodisc;
 
 import net.dv8tion.jda.api.entities.TextChannel;
-import net.dv8tion.jda.api.events.message.guild.GuildMessageReceivedEvent;
-import net.dv8tion.jda.api.events.message.guild.react.GuildMessageReactionAddEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import net.dv8tion.jda.api.events.message.react.MessageReactionAddEvent;
 import net.dv8tion.jda.api.exceptions.InsufficientPermissionException;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.bukkit.OfflinePlayer;
@@ -22,10 +22,12 @@ public class DiscordListener extends ListenerAdapter {
      *
      * @param event - for any guild messages read by bot
      */
-    public void onGuildMessageReceived(GuildMessageReceivedEvent event){
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event){
         boolean isBot = event.getAuthor().isBot();
-        TextChannel textChannel = event.getChannel();
+        TextChannel textChannel = event.getTextChannel();
         String user = event.getAuthor().getName(), rawMsg = event.getMessage().getContentRaw(), channelID = textChannel.getId();
+
         if(!isBot){
             try{
                 if(channelID.equals(mctodisc.getMinecraftServerChatChannelID())){
@@ -40,7 +42,7 @@ public class DiscordListener extends ListenerAdapter {
                             case "!mstats": if(size!= 2){
                                 textChannel.sendMessage("Wrong parameters given. Please try again.").queue();
                                 break;
-                            } else{ listStats(msgSplit[1], textChannel); } break;
+                            } else { listStats(msgSplit[1], textChannel); } break;
                             case "!mlistOn": listOnlinePlayers(textChannel); break;
                             default: break;
                         }
@@ -57,28 +59,37 @@ public class DiscordListener extends ListenerAdapter {
      *
      * @param event - sees when there's a reaction
      */
-    public void onGuildMessageReactionAdd(GuildMessageReactionAddEvent event){
+    @Override
+    public void onMessageReactionAdd(MessageReactionAddEvent event){
         boolean isBot = event.getUser().isBot();
-        TextChannel channel = event.getChannel();
+        TextChannel channel = event.getTextChannel();
         String channelID  = channel.getId(), rawMsg = event.retrieveMessage().complete().getContentRaw();
         int sizeOfMsg = rawMsg.split(" ").length; //Checks that message is ONLY a username.
-
-        if(channelID.equals(mctodisc.getWhitelistChannelID())) {
-            if (sizeOfMsg > 1) {
-                channel.sendMessage("Please make sure that you only enter your in-game name and nothing else.").queue();
-                return;
+        try{
+            if(channelID.equals(mctodisc.getWhitelistChannelID())) {
+                if (sizeOfMsg > 1) {
+                    channel.sendMessage("Please make sure that you only enter your in-game name and nothing else.").queue();
+                    return;
+                }
+                if(!isBot && sizeOfMsg == 1){
+                    mctodisc.whitelistUser(rawMsg);
+                }
             }
-            if(!isBot && sizeOfMsg == 1){
-                mctodisc.whitelistUser(rawMsg);
-            }
+        } catch(InsufficientPermissionException | NullPointerException ex){
+            ex.printStackTrace();
         }
     }
 
     private void listCommands(TextChannel channel){
-        channel.sendMessage("**List of available commands:**\n\n" +
-                "`!mlistOn` - lists the names of players online right now\n" +
-                "`!mstats <username>` - lists statistics of a given player (eg. `!mstats artemercy`)\n" +
-                "`!mhelp` - to bring up this menu").queue();
+        try{
+            channel.sendMessage("**List of available commands:**\n\n" +
+                    "`!mlistOn` - lists the names of players online right now\n" +
+                    "`!mstats <username>` - lists statistics of a given player (eg. `!mstats artemercy`)\n" +
+                    "`!mhelp` - to bring up this menu").queue();
+        } catch(InsufficientPermissionException ipe){
+            ipe.printStackTrace();
+        }
+
     }
 
     private void listStats(String user, TextChannel channel){
