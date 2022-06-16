@@ -22,7 +22,7 @@ public class MinecraftListener implements Listener {
     @EventHandler
     private void onServerMessageReceived(AsyncChatEvent e){
         int i = 1;
-        final var msg = PlainTextComponentSerializer.plainText().serialize(e.message());
+        final String msg = PlainTextComponentSerializer.plainText().serialize(e.message());
         mctodisc.sendToDiscord(e.getPlayer().getName(), msg, i);
     }
 
@@ -42,7 +42,7 @@ public class MinecraftListener implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent e) {
         int i = 3;
-        final var msg = PlainTextComponentSerializer.plainText().serialize(e.deathMessage());
+        final String msg = PlainTextComponentSerializer.plainText().serialize(e.deathMessage());
         mctodisc.sendToDiscord(msg, i);
         sendPlayerCoords(e.getPlayer());
     }
@@ -60,7 +60,7 @@ public class MinecraftListener implements Listener {
         try{
            int i = 4;
            if(e.getAdvancement().getDisplay() != null && e.getAdvancement().getDisplay().doesAnnounceToChat()){
-               final var s = PlainTextComponentSerializer.plainText().serialize(e.message());
+               final String s = PlainTextComponentSerializer.plainText().serialize(e.message());
                mctodisc.sendToDiscord(s, i);
            }
         } catch (NullPointerException npe){
