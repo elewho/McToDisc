@@ -1,6 +1,8 @@
 package me.imnotdani.mctodisc;
 
 import io.papermc.paper.event.player.AsyncChatEvent;
+import org.bukkit.ChatColor;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
@@ -40,7 +42,17 @@ public class MinecraftListener implements Listener {
     @EventHandler
     private void onPlayerDeath(PlayerDeathEvent e) {
         int i = 3;
-        mctodisc.sendToDiscord(e.getDeathMessage(), i);
+        final var msg = PlainTextComponentSerializer.plainText().serialize(e.deathMessage());
+        mctodisc.sendToDiscord(msg, i);
+        sendPlayerCoords(e.getPlayer());
+    }
+
+    private void sendPlayerCoords(Player player) {
+       int x = player.getLocation().getBlockX();
+       int y = player.getLocation().getBlockY();
+       int z = player.getLocation().getBlockZ();
+
+       player.sendMessage(ChatColor.BLUE + "[MQ] " + ChatColor.GOLD + "You died! Your death coordinates are: " + ChatColor.DARK_GREEN + x + ", " + y + ", " + z);
     }
 
     @EventHandler

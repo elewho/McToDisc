@@ -9,7 +9,6 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.Server;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -95,7 +94,6 @@ public final class Mctodisc extends JavaPlugin {
      * @param i - switch case
      *
      * 1: normal chat message
-     * 2: advancement message
      *
      */
     public void sendToDiscord(String user, String msg, int i){
